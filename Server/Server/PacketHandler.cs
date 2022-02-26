@@ -33,8 +33,12 @@ using System.Threading.Tasks;
             return;
         }
 
-        clientSession.Room.Broadcast(clientSession, p.chat);
+        GameRoom room = clientSession.Room;
+        room.Push(() => room.Broadcast(clientSession, p.chat)); //주문서에 넣는 행동
 
+       // clientSession.Room.Push(() => clientSession.Room.Broadcast(clientSession, p.chat)); //주문서에 넣는 행동
+
+       // clientSession.Room.Broadcast(clientSession, p.chat);
     }
 
 

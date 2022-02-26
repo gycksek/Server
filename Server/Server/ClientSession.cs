@@ -541,7 +541,9 @@ namespace Server
         {
             Console.WriteLine($"OnConnected: {endPoint}");
 
-            Program.Room.Enter(this);
+            Program.Room.Push(() => Program.Room.Enter(this));
+           // Program.Room.Enter(this);
+
             // Knight knight = new Knight() { attack = 10, hp = 100 };
             // Packet packet = new Packet() { size = 100, packetId = 10 };
 
@@ -576,7 +578,9 @@ namespace Server
 
             if(Room != null)
             {
-                Room.Leave(this);
+                GameRoom room = Room;
+                room.Push(() => room.Leave(this));
+               // Room.Leave(this);
                 Room = null;
             }
         }
@@ -624,7 +628,7 @@ namespace Server
 
         public override void OnSend(int numOfBytes)
         {
-            Console.WriteLine($"Trandsferred bytes: {numOfBytes}");
+           // Console.WriteLine($"Trandsferred bytes: {numOfBytes}");
         }
     }
 }
