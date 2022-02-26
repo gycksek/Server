@@ -10,3 +10,15 @@ C:\Users\윤효찬\Desktop\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.
 C:\Users\윤효찬\Desktop\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.dll
 C:\Users\윤효찬\Desktop\Server\Server\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll
 C:\Users\윤효찬\Desktop\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\bin\Debug\net6.0\ServerCore.deps.json
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\bin\Debug\net6.0\ServerCore.dll
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\bin\Debug\net6.0\ref\ServerCore.dll
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\bin\Debug\net6.0\ServerCore.pdb
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfo.cs
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.dll
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll
+C:\Users\User\Desktop\Hyochan\Server\Server\ServerCore\obj\Debug\net6.0\ServerCore.pdb

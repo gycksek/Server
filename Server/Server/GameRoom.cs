@@ -16,7 +16,7 @@ namespace Server
         {
             S2C_Chat packet = new S2C_Chat();
             packet.playerId = session.SessionId;
-            packet.chat = chat;
+            packet.chat = chat+$"I am {packet.playerId}";
             ArraySegment<byte> segment = packet.Write();
 
             lock(_lock)

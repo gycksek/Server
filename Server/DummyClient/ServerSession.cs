@@ -30,20 +30,20 @@ namespace DummyClient
     //    PlayerInfoOk=2,
     //}
 
-    class ServerSession : Session
+    class ServerSession : PacketSession
     {
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected: {endPoint}");
 
             // Packet packet = new Packet() { size = 4, packetId = 7 };
-            C2S_PlayerInfoReq packet = new C2S_PlayerInfoReq() { /*size = 4,*/ /*packetId = (ushort)PacketID.PlayerInfoReq,*/playerId=1001 ,name ="ABCD"};
-            var skill = new C2S_PlayerInfoReq.Skill() { id = 101, level = 1, duration = 3.0f };
-            skill.attributes.Add(new C2S_PlayerInfoReq.Skill.Attribute() { att = 77 });
-            packet.skills.Add(skill);
-            packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 201, level = 2, duration = 4.0f });
-            packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 301, level = 3, duration = 5.0f });
-            packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 401, level = 4, duration = 6.0f });
+            //C2S_PlayerInfoReq packet = new C2S_PlayerInfoReq() { /*size = 4,*/ /*packetId = (ushort)PacketID.PlayerInfoReq,*/playerId=1001 ,name ="ABCD"};
+            //var skill = new C2S_PlayerInfoReq.Skill() { id = 101, level = 1, duration = 3.0f };
+            //skill.attributes.Add(new C2S_PlayerInfoReq.Skill.Attribute() { att = 77 });
+            //packet.skills.Add(skill);
+            //packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 201, level = 2, duration = 4.0f });
+            //packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 301, level = 3, duration = 5.0f });
+            //packet.skills.Add(new C2S_PlayerInfoReq.Skill() { id = 401, level = 4, duration = 6.0f });
 
             // for (int i = 0; i < 5; ++i)
             {
@@ -88,13 +88,13 @@ namespace DummyClient
 
                 // ArraySegment<byte> sendBuff = SendBufferHelper.Close(count);
 
-                ArraySegment<byte>  s =packet.Write();
+               // ArraySegment<byte>  s =packet.Write();
 
                 //if(success)
                 // Send(sendBuff);
 
-                if(s!=null)
-                 Send(s);
+                //if(s!=null)
+                // Send(s);
             }
         }
 
@@ -103,17 +103,18 @@ namespace DummyClient
             Console.WriteLine($"OnDisconnected: {endPoint}");
         }
 
-        public override int OnRecv(ArraySegment<byte> buffer)
+        public override void  OnRecvPacket(ArraySegment<byte> buffer)
         {
-            string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); ;
-            Console.WriteLine($"[From Server] : {recvData}");
+            //string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); ;
+            //Console.WriteLine($"[From Server] : {recvData}");
 
-            return buffer.Count;
+            //return buffer.Count;
+            PacketManager.Instance.OnRecvPacket(this, buffer);
         }
 
         public override void OnSend(int numOfBytes)
         {
-            Console.WriteLine($"Trandsferred bytes: {numOfBytes}");
+           // Console.WriteLine($"Trandsferred bytes: {numOfBytes}");
         }
     }
 }
