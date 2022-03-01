@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\DummyClient\\DummyClient.csproj": {}
+    "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\DummyClient\\DummyClient.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\DummyClient\\DummyClient.csproj": {
+    "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\DummyClient\\DummyClient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\DummyClient\\DummyClient.csproj",
+        "projectUniqueName": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\DummyClient\\DummyClient.csproj",
         "projectName": "DummyClient",
-        "projectPath": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\DummyClient\\DummyClient.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\DummyClient\\obj\\",
+        "projectPath": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\DummyClient\\DummyClient.csproj",
+        "packagesPath": "C:\\Users\\윤효찬\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\DummyClient\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\윤효찬\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\ServerCore.csproj": {
-                "projectPath": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\ServerCore.csproj"
+              "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\ServerCore.csproj": {
+                "projectPath": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\ServerCore.csproj"
               }
             }
           }
@@ -58,21 +58,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\ServerCore.csproj": {
+    "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\ServerCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\ServerCore.csproj",
+        "projectUniqueName": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\ServerCore.csproj",
         "projectName": "ServerCore",
-        "projectPath": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\ServerCore.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\Hyochan\\Server\\Server\\ServerCore\\obj\\",
+        "projectPath": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\ServerCore.csproj",
+        "packagesPath": "C:\\Users\\윤효찬\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\윤효찬\\Desktop\\Server\\Server\\ServerCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\윤효찬\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -112,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

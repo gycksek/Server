@@ -12,8 +12,10 @@ namespace PacketGenerator
         public static string managerFormat =
 @"
      using ServerCore;
+    using System;
+    using System.Collections.Generic;
 
-    internal class PacketManager
+    public class PacketManager
     {{
        static PacketManager _instance=new PacketManager();
 
@@ -33,8 +35,9 @@ namespace PacketGenerator
         Register();
     }}
 
+        Dictionary<ushort, Func<PacketSession, ArraySegment<byte>,IPacket>> _makeFunc = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>,IPacket>>();
 
-        Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
+        //Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
         Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
         public void Register()
         {{
@@ -42,7 +45,7 @@ namespace PacketGenerator
 
         }}
 
-        public void OnRecvPacket(PacketSession session,ArraySegment<byte> buffer)
+        public void OnRecvPacket(PacketSession session,ArraySegment<byte> buffer,Action<PacketSession,IPacket> _onRecvCallback=null)
         {{
             ushort count = 0;
 
@@ -51,27 +54,47 @@ namespace PacketGenerator
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
 
-            Action<PacketSession, ArraySegment<byte>> action = null;
-            if (_onRecv.TryGetValue(id, out action))
-                action.Invoke(session, buffer);
+            //Action<PacketSession, ArraySegment<byte>> action = null;
+            //if (_onRecv.TryGetValue(id, out action))
+            //    action.Invoke(session, buffer);
+            Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
+            if (_makeFunc.TryGetValue(id, out func))
+            {{
+                 IPacket packet= func.Invoke(session, buffer);
+
+            if (_onRecvCallback != null)
+                _onRecvCallback.Invoke(session, packet);
+            else
+                HandlePacket(session, packet);
+            }}
 
         }}
 
-        void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket,new()
+        T MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket,new()
         {{
             T p = new T();
             p.Read(buffer);
-            Action<PacketSession, IPacket> action = null;
-            if (_handler.TryGetValue(p.Protocol, out action))
-                action.Invoke(session, p);
+            //Action<PacketSession, IPacket> action = null;
+            //if (_handler.TryGetValue(p.Protocol, out action))
+            //    action.Invoke(session, p);
+             return p;
         }}
+
+        public void HandlePacket(PacketSession session,IPacket packet)
+         {{
+            Action<PacketSession, IPacket> action = null;
+            if (_handler.TryGetValue(packet.Protocol, out action))
+            action.Invoke(session, packet);
+         }}
+
+
     }}
 
 ";
         //{0} 패킷 이름
         public static string managerRegisterFormat =
 @"
-        _onRecv.Add((ushort)PacketID.{0}, MakePacket<{0}>);
+        _makeFunc.Add((ushort)PacketID.{0}, MakePacket<{0}>);
         _handler.Add((ushort)PacketID.{0}, PacketHandler.{0}Handler);
 ";
 
@@ -82,6 +105,8 @@ namespace PacketGenerator
         using ServerCore;
         using System.Net;
         using System.Text;
+        using System;
+        using System.Collections.Generic;
 
          public enum PacketID
          {{
@@ -90,7 +115,7 @@ namespace PacketGenerator
              //PlayerInfoOk=2,
          }}
 
-        interface IPacket
+        public interface IPacket
         {{
             ushort Protocol {{ get; }}
             void Read(ArraySegment<byte> segment);
@@ -116,7 +141,7 @@ namespace PacketGenerator
         public static string packetFormat =
 @"
 
-class {0} : IPacket//PlayerInfoReq//:Packet
+    public class {0} : IPacket//PlayerInfoReq//:Packet
     {{
         {1}
 
@@ -167,7 +192,7 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         {{
             ushort count = 0;
 
-            ReadOnlySpan<byte> s =new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count);
+            //ReadOnlySpan<byte> s =new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count);
 
             //ushort size = BitConverter.ToUInt16(s.Array, s.Offset);
             count += sizeof(ushort);
@@ -205,9 +230,9 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         {{
             ArraySegment<byte> /*openSegment*/segment = SendBufferHelper.Open(4096);
             ushort count = 0;
-            bool success = true;
+           // bool success = true;
 
-            Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+            //Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
 
             //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset, s.Count), packet.size);
             //count += sizeof(ushort);
@@ -218,7 +243,10 @@ class {0} : IPacket//PlayerInfoReq//:Packet
             //success &= BitConverter.TryWriteBytes(new Span<byte>(s.Array, s.Offset, s.Count), count);
 
             count += sizeof(ushort);
-            success &= BitConverter.TryWriteBytes(s.Slice(count,s.Length-count), /*this.packetId*/(ushort)PacketID.{0}/*PlayerInfoReq*/);
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.{0}), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+
+            //success &= BitConverter.TryWriteBytes(s.Slice(count,s.Length-count), /*this.packetId*/(ushort)PacketID.{0}/*PlayerInfoReq*/);
+           // BitConverter.TryWriteBytes(s.Slice(count,s.Length-count), /*this.packetId*/(ushort)PacketID.{0}/*PlayerInfoReq*/);
             count += sizeof(ushort);
             //success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
             //count += sizeof(long);
@@ -247,10 +275,12 @@ class {0} : IPacket//PlayerInfoReq//:Packet
 
             {3}    
             
-            success &= BitConverter.TryWriteBytes(s, count);
+            //success &= BitConverter.TryWriteBytes(s, count);
+             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset , sizeof(ushort));
 
-            if (success == false)
-                return null;
+            //BitConverter.TryWriteBytes(s, count);
+            //if (success == false)
+            //    return null;
 
              return SendBufferHelper.Close(count);
 
@@ -279,7 +309,8 @@ class {0} : IPacket//PlayerInfoReq//:Packet
             //public float duration;
             {2}
 
-            public bool Write(Span<byte> s , ref ushort count)
+            //public bool Write(Span<byte> s , ref ushort count)
+            public bool Write(ArraySegment<byte> segment , ref ushort count)
             {{
                 bool success = true;
                 //success &= BitConverter.TryWriteBytes(s.Slice(count,s.Length-count),id);
@@ -291,7 +322,8 @@ class {0} : IPacket//PlayerInfoReq//:Packet
                 {4}
                 return success;
             }}
-            public void Read(ReadOnlySpan<byte> s,ref ushort count)
+           //public void Read(ReadOnlySpan<byte> s,ref ushort count)
+            public void Read(ArraySegment<byte> segment,ref ushort count)
             {{
                 {3}
                 //id = BitConverter.ToInt32(s.Slice(count, s.Length - count));
@@ -314,7 +346,7 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         //{2} 변수형식
         public static string readFormat =
 @"
-        /*id*/this.{0} = BitConverter./*ToInt32*/{1}(s.Slice(count, s.Length - count));
+        /*id*/this.{0} = BitConverter./*ToInt32*/{1}(/*s.Slice(count, s.Length - count)*/segment.Array,segment.Offset+count);
         count += sizeof({2}/*int*/);
 ";
 
@@ -330,9 +362,9 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         //{0} 변수이름
         public static string readStringFormat =
 @"
-        ushort {0}Len = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+        ushort {0}Len = BitConverter.ToUInt16(/*s.Slice(count, s.Length - count)*/segment.Array,segment.Offset+count);
         count += sizeof(ushort);
-        this.{0}=Encoding.Unicode.GetString(s.Slice(count, {0}Len));
+        this.{0}=Encoding.Unicode.GetString(/*s.Slice(count*/segment.Array,segment.Offset+count, {0}Len);
         count += {0}Len;
 ";
         //{0} 리스트 이름 [대문자]
@@ -340,13 +372,13 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         public static string readListFormat =
 @"
          /*skills*/this.{1}s.Clear();
-         ushort /*skill*/{1}Len = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+         ushort /*skill*/{1}Len = BitConverter.ToUInt16(/*s.Slice(count, s.Length - count)*/segment.Array,segment.Offset+count);
          count += sizeof(ushort);
        
          for(int i=0;i</*skill*/{1}Len;i++)
          {{
              /*SkillInfo*/ {0} {1} = new /*SkillInfo*/{0}();
-             /*skill*/{1}.Read(s, ref count);
+             /*skill*/{1}.Read(segment, ref count);
              /*skill*/{1}s.Add({1}/*skill*/);
          }}
 
@@ -358,14 +390,18 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         //{1} 변수형식
         public static string writeFormat =
 @"
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.{0});
+         Array.Copy(BitConverter.GetBytes(this.{0}),0,segment.Array,segment.Offset+count,sizeof({1}));
+
+        //success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.{0});
         count += sizeof({1});
 ";
         //{0} 변수이름
         public static string writeStringFormat =
 @"
         ushort {0}Len =(ushort)Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count+sizeof(ushort));
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), {0}Len);
+        Array.Copy(BitConverter.GetBytes({0}Len),0,segment.Array,segment.Offset+count,sizeof(ushort));        
+
+       // success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), {0}Len);
         count += sizeof(ushort);
         count += {0}Len;
 
@@ -374,11 +410,15 @@ class {0} : IPacket//PlayerInfoReq//:Packet
         //{1} 리스트 이름 [소문자]
         public static string writeListFormat =
 @"
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.{1}s.Count);
+
+         Array.Copy(BitConverter.GetBytes((ushort)this.{1}s.Count),0,segment.Array,segment.Offset+count,sizeof(ushort));
+
+       // success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.{1}s.Count);
         count += sizeof(ushort);
         foreach({0} {1} in {1}s)
         {{
-            success &= {1}.Write(s, ref count);
+           // success &= {1}.Write(s, ref count);
+            {1}.Write(segment, ref count);
         }}
 ";
 
