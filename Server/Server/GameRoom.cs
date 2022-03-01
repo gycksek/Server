@@ -100,14 +100,14 @@ namespace Server
             //좌표 바궈주고
             session.PosX = packet.posX;
             session.PosY = packet.posY;
-            session.PosX = packet.posX;
+            session.PosZ = packet.posZ;
 
             //모두에게 알린다
             S2C_BroadcastMove move = new S2C_BroadcastMove();
             move.playerId = session.SessionId;
             move.posX = session.PosX;
             move.posY = session.PosY;
-            move.posX = session.PosX;
+            move.posZ = session.PosZ;
             Broadcast(move.Write());
         }
             public void Push(Action job)
