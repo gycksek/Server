@@ -1,4 +1,6 @@
-﻿using Server;
+﻿using Google.Protobuf;
+using Google.Protobuf.Protocol;
+using Server;
 using ServerCore;
 using System;
 using System.Collections.Generic;
@@ -68,6 +70,13 @@ internal class PacketHandler
         GameRoom room = clientSession.Room;
         room.Push(() => room.Move(clientSession,movePacket));
 
+    }
+
+    public static void C2S_Chat_Proto_Handler(PacketSession session, IMessage packet)
+    {
+        S2C_Chat_Proto chatPacket = packet as S2C_Chat_Proto;
+        ClientSession serverSession = session as ClientSession;
+        Console.WriteLine(chatPacket.Context);
     }
 }
 

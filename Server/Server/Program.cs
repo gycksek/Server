@@ -1,7 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Google.Protobuf;
+using Google.Protobuf.Protocol;
 using ServerCore;
+using static Google.Protobuf.Protocol.Person.Types;
 
 namespace Server
 {
@@ -89,6 +92,9 @@ namespace Server
 
         static void Main(string[] args)
         {
+
+
+
            // PacketManager.Instance.Register();
 
             string host = Dns.GetHostName();

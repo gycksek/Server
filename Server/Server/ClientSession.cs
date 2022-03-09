@@ -1,10 +1,13 @@
-﻿using ServerCore;
+﻿using Google.Protobuf;
+using Google.Protobuf.Protocol;
+using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static Google.Protobuf.Protocol.Person.Types;
 
 namespace Server
 {
@@ -545,7 +548,7 @@ namespace Server
             Console.WriteLine($"OnConnected: {endPoint}");
 
             Program.Room.Push(() => Program.Room.Enter(this));
-           // Program.Room.Enter(this);
+            // Program.Room.Enter(this);
 
             // Knight knight = new Knight() { attack = 10, hp = 100 };
             // Packet packet = new Packet() { size = 100, packetId = 10 };
@@ -572,7 +575,37 @@ namespace Server
             //Thread.Sleep(5000);
             //Disconnect();
 
+            //    Person person = new Person()
+            //    {
+            //        Name = "Hyochan",
+            //        Id = 123,
+            //        Email = "gycksek@gmail.com",
+            //        Phones = { new PhoneNumber { Number = "555-4321", Type = Person.Types.PhoneType.Home } }
+            //    };
+
+            //    ushort size = (ushort)person.CalculateSize();
+            //    byte[] sendBuffer = new byte[size + 4];
+            //    Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
+            //    ushort protocoId = 1;
+            //    Array.Copy(BitConverter.GetBytes(protocoId), 0, sendBuffer, 2, sizeof(ushort));
+            //    Array.Copy(person.ToByteArray(), 0, sendBuffer, 4, size);
+
+            //    Send(new ArraySegment<byte>(sendBuffer));
+
+            S2C_Chat_Proto chat = new S2C_Chat_Proto()
+            {
+                Context = "안녕하세요"
+            };
+            ushort size = (ushort)chat.CalculateSize();
+            byte[] sendBuffer = new byte[size + 4];
+            Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
+            ushort protocoId = (ushort)MsgId.S2CChatProto;
+            Array.Copy(BitConverter.GetBytes(protocoId), 0, sendBuffer, 2, sizeof(ushort));
+            Array.Copy(chat.ToByteArray(), 0, sendBuffer, 4, size);
+
+            Send(new ArraySegment<byte>(sendBuffer));
         }
+
 
         public override void OnDisconnected(EndPoint endPoint)
         {
@@ -590,7 +623,8 @@ namespace Server
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
-            PacketManager.Instance.OnRecvPacket(this, buffer);
+            PacketManager2.Instance.OnRecvPacket(this, buffer);
+            //PacketManager.Instance.OnRecvPacket(this, buffer);
 
             //ushort count = 0;
 
@@ -618,7 +652,7 @@ namespace Server
             //        break;
             //}
 
-           // Console.WriteLine($"RecvPacketId: {id},Size : {size}");
+            // Console.WriteLine($"RecvPacketId: {id},Size : {size}");
         }
 
         //public override int OnRecv(ArraySegment<byte> buffer)
